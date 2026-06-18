@@ -72,7 +72,7 @@ int	check_quotes(char *str)
 	}
 	if (quote != 0)
 	{
-		print_error(NULL, "syntax error: unclosed quotes", 258);
+		print_error(NULL, "syntax error: unclosed quotes", 2);
 		return (0);
 	}
 	return (1);

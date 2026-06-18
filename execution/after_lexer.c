@@ -23,7 +23,7 @@ static void	ft_wait(int id)
 	{
 		g_exit_status = 128 + WTERMSIG(status);
 		if (WTERMSIG(status) == 3)
-			printf("Quit: 3\n");
+			printf("Quit (core dumped)\n");
 		else if (WTERMSIG(status) == 2)
 			printf("\n");
 	}

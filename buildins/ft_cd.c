@@ -62,19 +62,35 @@ void	update_pwd_oldpwd(char ***env)
 	sync_pwd(env);
 }
 
-void	ft_cd(t_cmd *cmd, char ***env)
+static int	ft_cd_no_arg(char ***env)
 {
 	char	*home;
 
-	g_exit_status = 0;
-	if (cmd->args[1] == NULL)
+	home = get_env_value("HOME", *env);
+	if (home == NULL)
 	{
-		home = get_env_value("HOME", *env);
-		if (home == NULL)
-			print_error("cd", "HOME not set", 1);
-		else if (chdir(home) != 0)
-			print_error("cd", strerror(errno), 1);
+		print_error("cd", "HOME not set", 1);
+		return (1);
 	}
+	if (chdir(home) != 0)
+	{
+		print_error("cd", strerror(errno), 1);
+		return (1);
+	}
+	return (0);
+}
+
+void	ft_cd(t_cmd *cmd, char ***env)
+{
+	g_exit_status = 0;
+	if (cmd->args[1] != NULL && cmd->args[2] != NULL)
+	{
+		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
+		g_exit_status = 1;
+		return ;
+	}
+	if (cmd->args[1] == NULL)
+		g_exit_status = ft_cd_no_arg(env);
 	else if (chdir(cmd->args[1]) != 0)
 	{
 		ft_putstr_fd("minishell: cd: ", 2);

@@ -59,7 +59,7 @@ int	pipe_error(t_token *tokens)
 	tmp = tokens;
 	if (!tmp->next || tmp->next->type == PIPE)
 	{
-		print_error(NULL, "syntax error near unexpected token `|'", 258);
+		print_error(NULL, "syntax error near unexpected token `|'", 2);
 		return (0);
 	}
 	return (1);

@@ -12,12 +12,16 @@
 
 #include "../minishell.h"
 
-static void	redirout_or_not(t_token **temp, t_cmd *current_cmd)
+static void redirout_or_not(t_token **temp, t_cmd *current_cmd)
 {
 	*temp = (*temp)->next;
 	if (*temp && (*temp)->type == WORD)
+	{
 		current_cmd->fd_out = open((*temp)->value,
 				O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (current_cmd->fd_out == -1)
+			print_error((*temp)->value, strerror(errno), 1);
+	}
 }
 
 static void	append_or_not(t_token **temp, t_cmd *current_cmd)

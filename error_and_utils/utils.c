@@ -12,21 +12,6 @@
 
 #include "../minishell.h"
 
-void	free_env(char **env)
-{
-	int	i;
-
-	if (!env)
-		return ;
-	i = 0;
-	while (env[i] != NULL)
-	{
-		free(env[i]);
-		i++;
-	}
-	free(env);
-}
-
 void	free_cmds(t_cmd *cmds)
 {
 	t_cmd	*tmp;
@@ -93,6 +78,23 @@ int	check_quotes(char *str)
 	return (1);
 }
 
+static void	print_token_error(t_token *bad_token)
+{
+	char	*msg;
+	char	*full_msg;
+
+	if (!bad_token)
+		msg = ft_strdup("newline");
+	else
+		msg = ft_strdup(bad_token->value);
+	full_msg = ft_strjoin("syntax error near unexpected token `", msg);
+	free(msg);
+	msg = ft_strjoin(full_msg, "'");
+	free(full_msg);
+	print_error(NULL, msg, 2);
+	free(msg);
+}
+
 int	check_syntax(t_token *tokens)
 {
 	t_token	*tmp;
@@ -100,7 +102,7 @@ int	check_syntax(t_token *tokens)
 	tmp = tokens;
 	if (tokens && tokens->type == PIPE)
 	{
-		print_error(NULL, "syntax error near unexpected token `|'", 258);
+		print_token_error(tokens);
 		return (0);
 	}
 	while (tmp)
@@ -109,8 +111,7 @@ int	check_syntax(t_token *tokens)
 		{
 			if (!tmp->next || tmp->next->type != WORD)
 			{
-				print_error(NULL,
-					"syntax error near unexpected token `newline'", 258);
+				print_token_error(tmp->next);
 				return (0);
 			}
 		}

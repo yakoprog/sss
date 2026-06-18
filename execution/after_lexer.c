@@ -43,7 +43,7 @@ int	ft_bypass(t_cmd *tmp, char ***env)
 			dup2(tmp->fd_out, 1);
 			close(tmp->fd_out);
 		}
-		execute_builtin(tmp, env);
+		execute_builtin(tmp, env, 0);
 		dup2(original_out, 1);
 		close(original_out);
 		return (1);

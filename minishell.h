@@ -6,7 +6,7 @@
 /*   By: ycinarog <ycinarog@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/18 14:15:51 by ycinarog          #+#    #+#             */
-/*   Updated: 2026/06/18 16:34:33 by ycinarog         ###   ########.fr       */
+/*   Updated: 2026/06/18 20:59:46 by ycinarog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@
 # include <sys/wait.h>
 # include <errno.h>
 # include <string.h>
+# include <sys/stat.h>
 
 typedef enum e_token_type
 {
@@ -73,10 +74,12 @@ t_token	*new_token(char *value, t_type type, int quote_type);
 void	ft_token_add_back(t_token **tokens, t_token *new_node);
 int		check_command(char *input, char **envp);
 char	*put_command(char *input, char **envp);
+void	ft_free_split(char **arr);
+int		has_slash(char *str);
 void	after_lexer(t_cmd *cmds, char ***env);
 void	parse_tokens(t_token *tokens, t_cmd **cmds);
 int		is_builtin(char *cmd);
-void	execute_builtin(t_cmd *cmd, char ***env);
+void	execute_builtin(t_cmd *cmd, char ***env, int is_child);
 char	*get_env_value(char *key, char **envp);
 char	**export_add(char *new_var, char **old_env);
 char	**copy_env(char **envp);
@@ -89,7 +92,6 @@ void	init_signals(void);
 void	ignore_sigint_parent(void);
 void	restore_sigint_parent(void);
 void	handle_sigint(int sig);
-void	free_env(char **env);
 void	free_cmds(t_cmd *cmds);
 
 void	pipe_connection(t_cmd *cmd);
@@ -98,9 +100,9 @@ void	ft_multiple_pipe(t_cmd *tmp, char ***env, int *id, int *prev_read_fd);
 void	ft_cd(t_cmd *cmd, char ***env);
 void	ft_echo(t_cmd *cmd);
 void	ft_env(char ***env);
-void	ft_exit(t_cmd *cmd);
+void	ft_exit(t_cmd *cmd, int is_child);
 void	ft_export(t_cmd *cmd, char ***env);
-void	ft_pwd(void);
+void	ft_pwd(char ***env);
 void	ft_unset(t_cmd *cmd, char ***env);
 
 void	print_error(char *cmd, char *msg, int err_code);

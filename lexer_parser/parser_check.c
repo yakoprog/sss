@@ -24,15 +24,23 @@ static void	append_or_not(t_token **temp, t_cmd *current_cmd)
 {
 	*temp = (*temp)->next;
 	if (*temp && (*temp)->type == WORD)
+	{
 		current_cmd->fd_out = open((*temp)->value,
 				O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (current_cmd->fd_out == -1)
+			print_error((*temp)->value, strerror(errno), 1);
+	}
 }
 
 static void	redirin_or_not(t_token **temp, t_cmd *current_cmd)
 {
 	*temp = (*temp)->next;
 	if (*temp && (*temp)->type == WORD)
+	{
 		current_cmd->fd_in = open((*temp)->value, O_RDONLY);
+		if (current_cmd->fd_in == -1)
+			print_error((*temp)->value, strerror(errno), 1);
+	}
 }
 
 static void	word_or_not(t_token *temp, t_cmd *current_cmd, int i)

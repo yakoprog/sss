@@ -12,9 +12,10 @@
 
 #include "../minishell.h"
 
-void	ft_pwd(void)
+void	ft_pwd(char ***env)
 {
 	char	cwd[1024];
+	char	*pwd_val;
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
@@ -23,6 +24,13 @@ void	ft_pwd(void)
 	}
 	else
 	{
-		print_error("pwd", strerror(errno), 1);
+		pwd_val = get_env_value("PWD", *env);
+		if (pwd_val)
+		{
+			printf("%s\n", pwd_val);
+			g_exit_status = 0;
+		}
+		else
+			print_error("pwd", strerror(errno), 1);
 	}
 }

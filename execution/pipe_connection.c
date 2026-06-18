@@ -14,10 +14,10 @@
 
 void	pipe_connection(t_cmd *cmd)
 {
-	if (!cmd->args || !cmd->args[0])
-		exit(0);
 	if (cmd->fd_in == -1 || cmd->fd_out == -1)
 		exit(1);
+	if (!cmd->args || !cmd->args[0])
+		exit(0);
 	if (cmd->fd_in != 0)
 	{
 		dup2(cmd->fd_in, 0);

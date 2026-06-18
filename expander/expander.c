@@ -41,7 +41,7 @@ char	*remove_quotes(char *str)
 	return (new_str);
 }
 
-char *get_expand_var_value(t_expand *exp, char *str, int *i, char **env)
+char	*get_expand_var_value(t_expand *exp, char *str, int *i, char **env)
 {
 	int	j;
 

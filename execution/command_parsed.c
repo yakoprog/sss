@@ -12,16 +12,17 @@
 
 #include "../minishell.h"
 
-void	ft_free_split(char **arr)
+static int	is_executable_file(char *path)
 {
-	int	k;
+	struct stat	st;
 
-	k = 0;
-	if (!arr)
-		return ;
-	while (arr[k])
-		free(arr[k++]);
-	free(arr);
+	if (access(path, F_OK | X_OK) != 0)
+		return (0);
+	if (stat(path, &st) != 0)
+		return (0);
+	if (S_ISDIR(st.st_mode))
+		return (0);
+	return (1);
 }
 
 static char	*ft_find_command(char *input)
@@ -31,7 +32,7 @@ static char	*ft_find_command(char *input)
 	int		i;
 
 	i = 0;
-	if (access(input, F_OK | X_OK) == 0)
+	if (is_executable_file(input))
 		return (ft_strdup(input));
 	while (input[i] != '\0' && input[i] != ' ')
 		i++;
@@ -52,7 +53,7 @@ static char	*ft_find_path_location(char **path, char *cmd_parsed)
 	while (path && path[k] != NULL)
 	{
 		path_loc = ft_strjoin(path[k], cmd_parsed);
-		if (access(path_loc, F_OK) == 0)
+		if (is_executable_file(path_loc))
 		{
 			free(cmd_parsed);
 			ft_free_split(path);
@@ -90,8 +91,10 @@ char	*put_command(char *input, char **envp)
 
 	if (!input || !input[0])
 		return (NULL);
-	if (access(input, F_OK | X_OK) == 0)
+	if (is_executable_file(input))
 		return (ft_strdup(input));
+	if (has_slash(input))
+		return (NULL);
 	cmd_parsed = ft_find_command(input);
 	path_str = get_path_from_env(envp);
 	if (!cmd_parsed || !path_str)

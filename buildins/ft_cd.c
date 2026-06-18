@@ -15,12 +15,24 @@
 static void	safe_env_update(char *key, char *value, char ***env)
 {
 	char	*env_str;
+	char	*key_no_eq;
+	int		len;
 
 	env_str = ft_strjoin(key, value);
 	if (!env_str)
 		return ;
-	*env = export_remove(key, *env);
+	len = ft_strlen(key);
+	if (len > 0 && key[len - 1] == '=')
+		len--;
+	key_no_eq = ft_substr(key, 0, len);
+	if (!key_no_eq)
+	{
+		free(env_str);
+		return ;
+	}
+	*env = export_remove(key_no_eq, *env);
 	*env = export_add(env_str, *env);
+	free(key_no_eq);
 	free(env_str);
 }
 
@@ -35,12 +47,18 @@ static void	sync_pwd(char ***env)
 void	update_pwd_oldpwd(char ***env)
 {
 	char	*old_path;
+	char	*old_path_copy;
 
 	old_path = get_env_value("PWD", *env);
 	if (old_path)
-		safe_env_update("OLDPWD=", old_path, env);
+		old_path_copy = ft_strdup(old_path);
 	else
-		safe_env_update("OLDPWD=", "", env);
+		old_path_copy = ft_strdup("");
+	if (old_path_copy)
+	{
+		safe_env_update("OLDPWD=", old_path_copy, env);
+		free(old_path_copy);
+	}
 	sync_pwd(env);
 }
 

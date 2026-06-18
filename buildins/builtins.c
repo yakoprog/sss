@@ -33,14 +33,14 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-void	execute_builtin(t_cmd *cmd, char ***env)
+void	execute_builtin(t_cmd *cmd, char ***env, int is_child)
 {
 	if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
-		ft_pwd();
+		ft_pwd(env);
 	else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
 		ft_env(env);
 	else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
-		ft_exit(cmd);
+		ft_exit(cmd, is_child);
 	else if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
 		ft_cd(cmd, env);
 	else if (ft_strncmp(cmd->args[0], "echo", 5) == 0)

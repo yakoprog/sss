@@ -6,31 +6,48 @@
 /*   By: ycinarog <ycinarog@student.42istanbul.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/18 14:21:53 by ycinarog          #+#    #+#             */
-/*   Updated: 2026/06/18 16:37:06 by ycinarog         ###   ########.fr       */
+/*   Updated: 2026/06/18 20:58:04 by ycinarog         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
+static void	report_path_error(char *cmd_name)
+{
+	struct stat	st;
+
+	if (!has_slash(cmd_name))
+	{
+		print_error(cmd_name, "command not found", 127);
+		exit(127);
+	}
+	if (stat(cmd_name, &st) != 0)
+	{
+		print_error(cmd_name, "No such file or directory", 127);
+		exit(127);
+	}
+	if (S_ISDIR(st.st_mode))
+	{
+		print_error(cmd_name, "Is a directory", 126);
+		exit(126);
+	}
+	print_error(cmd_name, "Permission denied", 126);
+	exit(126);
+}
+
 static void	child_execute(t_cmd *cmd, char ***env)
 {
 	char	*path;
 
-	signal(SIGINT, SIG_DFL);
-	signal(SIGQUIT, SIG_DFL);
-	pipe_connection(cmd);
 	pipe_connection(cmd);
 	if (is_builtin(cmd->args[0]))
 	{
-		execute_builtin(cmd, env);
+		execute_builtin(cmd, env, 1);
 		exit(g_exit_status);
 	}
 	path = put_command(cmd->args[0], *env);
 	if (!path)
-	{
-		print_error(cmd->args[0], "command not found", 127);
-		exit(127);
-	}
+		report_path_error(cmd->args[0]);
 	execve(path, cmd->args, *env);
 	print_error(cmd->args[0], strerror(errno), 126);
 	exit(126);

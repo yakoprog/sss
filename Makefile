@@ -13,9 +13,9 @@ SRC     = main.c \
 ./lexer_parser/parser_utils.c \
 ./lexer_parser/parser_check.c \
 ./lexer_parser/token_create.c \
-./execution/command_or_not.c \
 ./execution/command_parsed.c \
 ./execution/after_lexer.c \
+./execution/ft_free.c 		\
 ./execution/pipe_connection.c \
 ./execution/ft_multible_pipe.c \
 ./buildins/builtins.c \

@@ -30,9 +30,10 @@ static int	is_numeric(char *str)
 	return (1);
 }
 
-void	ft_exit(t_cmd *cmd)
+void	ft_exit(t_cmd *cmd, int is_child)
 {
-	ft_putstr_fd("exit\n", 2);
+	if (!is_child)
+		ft_putstr_fd("exit\n", 2);
 	if (cmd->args[1] == NULL)
 		exit(g_exit_status);
 	if (!is_numeric(cmd->args[1]))

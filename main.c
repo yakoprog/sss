@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int g_exit_status = 0;
+int	g_exit_status = 0;
 
 static void	setup_shell(char **envp, char ***my_env)
 {
@@ -21,7 +21,7 @@ static void	setup_shell(char **envp, char ***my_env)
 	init_signals();
 }
 
-static void	process_command_line(char *input, char **my_env)
+static void	process_command_line(char *input, char ***my_env)
 {
 	t_token	*token_list;
 	t_cmd	*cmd_list;
@@ -37,13 +37,13 @@ static void	process_command_line(char *input, char **my_env)
 		return ;
 	}
 	parse_tokens(token_list, &cmd_list);
-	expand_cmds(cmd_list, my_env);
-	after_lexer(cmd_list, &my_env);
+	expand_cmds(cmd_list, *my_env);
+	after_lexer(cmd_list, my_env);
 	free_tokens(token_list);
 	free_cmds(cmd_list);
 }
 
-static void	shell_loop(char **my_env)
+static void	shell_loop(char ***my_env)
 {
 	char	*input;
 
@@ -68,7 +68,7 @@ static void	shell_loop(char **my_env)
 
 static void	cleanup_shell(char **my_env)
 {
-	free_env(my_env);
+	ft_free_split(my_env);
 	clear_history();
 }
 
@@ -83,7 +83,7 @@ int	main(int ac, char **av, char **envp)
 		return (1);
 	}
 	setup_shell(envp, &my_env);
-	shell_loop(my_env);
+	shell_loop(&my_env);
 	cleanup_shell(my_env);
 	return (g_exit_status);
 }

@@ -40,40 +40,46 @@ int	handle_operator(char *input, t_token **tokens)
 	return (len);
 }
 
+static int	is_word_break(char c, t_quote_state *qs)
+{
+	return (!qs->in_sq && !qs->in_dq && (c == ' ' || c == '\t'
+			|| c == '|' || c == '<' || c == '>'));
+}
+
+static void	update_quote_state(char c, t_quote_state *qs)
+{
+	if (c == '\'' && !qs->in_dq)
+	{
+		qs->in_sq = !qs->in_sq;
+		if (qs->quote_type == 0)
+			qs->quote_type = 1;
+	}
+	else if (c == '"' && !qs->in_sq)
+	{
+		qs->in_dq = !qs->in_dq;
+		if (qs->quote_type == 0)
+			qs->quote_type = 2;
+	}
+}
+
 int	handle_word(char *input, t_token **tokens)
 {
-	int	len;
-	int	in_sq;
-	int	in_dq;
-	int	quote_type;
+	int				len;
+	t_quote_state	qs;
 
 	len = 0;
-	in_sq = 0;
-	in_dq = 0;
-	quote_type = 0;
+	qs.in_sq = 0;
+	qs.in_dq = 0;
+	qs.quote_type = 0;
 	while (input[len])
 	{
-		if (input[len] == '\'' && !in_dq)
-		{
-			in_sq = !in_sq;
-			if (quote_type == 0)
-				quote_type = 1;
-		}
-		else if (input[len] == '"' && !in_sq)
-		{
-			in_dq = !in_dq;
-			if (quote_type == 0)
-				quote_type = 2;
-		}
-		else if (!in_sq && !in_dq && (input[len] == ' ' || input[len] == '\t'
-				|| input[len] == '|' || input[len] == '<'
-				|| input[len] == '>'))
-		{
+		if (input[len] == '\'' || input[len] == '"')
+			update_quote_state(input[len], &qs);
+		else if (is_word_break(input[len], &qs))
 			break ;
-		}
 		len++;
 	}
-	word_create(tokens, input, quote_type, len);
+	word_create(tokens, input, qs.quote_type, len);
 	return (len);
 }
 
@@ -96,18 +102,5 @@ void	lexer(char *input, t_token **tokens)
 		{
 			i += handle_word(input + i, tokens);
 		}
-	}
-}
-
-void	free_tokens(t_token *tokens)
-{
-	t_token	*temp;
-
-	while (tokens)
-	{
-		temp = tokens;
-		tokens = tokens->next;
-		free(temp->value);
-		free(temp);
 	}
 }

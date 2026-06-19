@@ -42,12 +42,12 @@ void	ft_echo(t_cmd *cmd)
 	}
 	while (cmd->args[i] != NULL)
 	{
-		printf("%s", cmd->args[i]);
+		ft_putstr_fd(cmd->args[i], 1);
 		if (cmd->args[i + 1] != NULL)
-			printf(" ");
+			ft_putstr_fd(" ", 1);
 		i++;
 	}
 	if (n_flag == 0)
-		printf("\n");
+		ft_putstr_fd("\n", 1);
 	g_exit_status = 0;
 }

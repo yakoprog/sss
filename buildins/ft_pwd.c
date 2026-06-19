@@ -19,7 +19,7 @@ void	ft_pwd(char ***env)
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
-		printf("%s\n", cwd);
+		ft_putendl_fd(cwd, 1);
 		g_exit_status = 0;
 	}
 	else
@@ -27,7 +27,7 @@ void	ft_pwd(char ***env)
 		pwd_val = get_env_value("PWD", *env);
 		if (pwd_val)
 		{
-			printf("%s\n", pwd_val);
+			ft_putendl_fd(pwd_val, 1);
 			g_exit_status = 0;
 		}
 		else

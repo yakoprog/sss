@@ -67,13 +67,19 @@ typedef struct s_token
 	struct s_token	*prev;
 }	t_token;
 
+typedef struct s_quote_state
+{
+	int	in_sq;
+	int	in_dq;
+	int	quote_type;
+}	t_quote_state;
+
 extern int	g_exit_status;
 
 void	lexer(char *input, t_token **tokens);
 void	free_tokens(t_token *tokens);
 t_token	*new_token(char *value, t_type type, int quote_type);
 void	ft_token_add_back(t_token **tokens, t_token *new_node);
-//int		check_command(char *input, char **envp);
 char	*put_command(char *input, char **envp);
 void	ft_free_split(char **arr);
 int		has_slash(char *str);
@@ -88,6 +94,11 @@ char	**export_remove(char *target, char **old_env);
 void	expand_cmds(t_cmd *cmds, char **env);
 char	*expand_single_str(char *str, char **env);
 char	*remove_quotes(char *str);
+void	redirout_or_not(t_token **temp, t_cmd *current_cmd);
+void	append_or_not(t_token **temp, t_cmd *current_cmd);
+void	redirin_or_not(t_token **temp, t_cmd *current_cmd);
+void	expand_cmd_args(t_cmd *tmp_cmd, char **env);
+void	strip_empty_unquoted(t_cmd *tmp_cmd);
 
 void	init_signals(void);
 void	ignore_sigint_parent(void);
@@ -115,7 +126,6 @@ int		check_quotes(char *str);
 
 void	operator_create(t_token **tokens, t_type type, char *input, int len);
 void	word_create(t_token **tokens, char *input, int quote_type, int len);
-void	single_double_none_quote(char *input, int len, int *quote_type);
 int		handle_heredoc(char *delimiter);
 
 void	pipe_or_not(t_token **temp, t_cmd *current_cmd, int *i);

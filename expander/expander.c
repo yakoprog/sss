@@ -96,37 +96,37 @@ char	*expand_single_str(char *str, char **env)
 	return (str);
 }
 
-void	expand_cmds(t_cmd *cmds, char **env)
+void	expand_cmd_args(t_cmd *tmp_cmd, char **env)
 {
-	t_cmd	*tmp_cmd;
-	int		i;
-	int		j;
+	int	i;
 
-	tmp_cmd = cmds;
-	while (tmp_cmd != NULL)
+	i = 0;
+	while (tmp_cmd->args[i] != NULL)
 	{
-		i = 0;
-		while (tmp_cmd->args[i] != NULL)
-		{
-			tmp_cmd->args[i] = expand_single_str(tmp_cmd->args[i], env);
-			tmp_cmd->args[i] = remove_quotes(tmp_cmd->args[i]);
-			i++;
-		}
-		j = 0;
-		i = 0;
-		while (tmp_cmd->args[i] != NULL)
-		{
-			if (tmp_cmd->args[i][0] == '\0' && !tmp_cmd->arg_quoted[i])
-				free(tmp_cmd->args[i]);
-			else
-			{
-				tmp_cmd->args[j] = tmp_cmd->args[i];
-				tmp_cmd->arg_quoted[j] = tmp_cmd->arg_quoted[i];
-				j++;
-			}
-			i++;
-		}
-		tmp_cmd->args[j] = NULL;
-		tmp_cmd = tmp_cmd->next;
+		tmp_cmd->args[i] = expand_single_str(tmp_cmd->args[i], env);
+		tmp_cmd->args[i] = remove_quotes(tmp_cmd->args[i]);
+		i++;
 	}
+}
+
+void	strip_empty_unquoted(t_cmd *tmp_cmd)
+{
+	int	i;
+	int	j;
+
+	j = 0;
+	i = 0;
+	while (tmp_cmd->args[i] != NULL)
+	{
+		if (tmp_cmd->args[i][0] == '\0' && !tmp_cmd->arg_quoted[i])
+			free(tmp_cmd->args[i]);
+		else
+		{
+			tmp_cmd->args[j] = tmp_cmd->args[i];
+			tmp_cmd->arg_quoted[j] = tmp_cmd->arg_quoted[i];
+			j++;
+		}
+		i++;
+	}
+	tmp_cmd->args[j] = NULL;
 }

@@ -19,7 +19,7 @@ void	ft_env(char ***env)
 	i = 0;
 	while ((*env)[i] != NULL)
 	{
-		printf("%s\n", (*env)[i]);
+		ft_putendl_fd((*env)[i], 1);
 		i++;
 	}
 	g_exit_status = 0;

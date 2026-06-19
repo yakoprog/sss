@@ -16,7 +16,7 @@ void	heredoc_sigint(int sig)
 {
 	(void)sig;
 	g_exit_status = 130;
-	printf("\n");
+	write(1, "\n", 1);
 	close(STDIN_FILENO);
 }
 

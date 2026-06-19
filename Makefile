@@ -10,6 +10,8 @@ LIBS    = -lreadline -L./libft -lft -L./get_next_line -lgnl -L./ft_printf -lftpr
 SRC     = main.c \
 ./lexer_parser/lexer.c \
 ./lexer_parser/parser.c \
+./lexer_parser/free_tokens.c \
+./lexer_parser/redirect_check.c \
 ./lexer_parser/parser_utils.c \
 ./lexer_parser/parser_check.c \
 ./lexer_parser/token_create.c \
@@ -32,6 +34,7 @@ signals.c \
 ./error_and_utils/error_utils.c \
 ./expander/expander.c \
 ./expander/expander_utils.c \
+./expander/expand_cmd.c \
 ./buildins/env_utils.c 
 
 

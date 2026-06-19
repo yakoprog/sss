@@ -23,9 +23,9 @@ static void	ft_wait(int id)
 	{
 		g_exit_status = 128 + WTERMSIG(status);
 		if (WTERMSIG(status) == 3)
-			printf("Quit (core dumped)\n");
+			ft_putstr_fd("Quit (core dumped)\n", 1);
 		else if (WTERMSIG(status) == 2)
-			printf("\n");
+			ft_putstr_fd("\n", 1);
 	}
 	while (wait(NULL) > 0)
 		;
@@ -49,7 +49,6 @@ int	ft_bypass(t_cmd *tmp, char ***env)
 			close(tmp->fd_out);
 		}
 		execute_builtin(tmp, env, 0);
-		fflush(stdout);
 		dup2(original_out, 1);
 		close(original_out);
 		return (1);

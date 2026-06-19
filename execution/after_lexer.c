@@ -12,19 +12,19 @@
 
 #include "../minishell.h"
 
-static void	ft_wait(int id)
+static void	ft_wait(int id, t_shell *shell)
 {
 	int	status;
 
 	waitpid(id, &status, 0);
 	if (WIFEXITED(status))
-		g_exit_status = WEXITSTATUS(status);
+		shell->exit_status = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 	{
-		g_exit_status = 128 + WTERMSIG(status);
-		if (WTERMSIG(status) == 3)
+		shell->exit_status = 128 + WTERMSIG(status);
+		if (WTERMSIG(status) == SIGQUIT)
 			ft_putstr_fd("Quit (core dumped)\n", 1);
-		else if (WTERMSIG(status) == 2)
+		else if (WTERMSIG(status) == SIGINT)
 			ft_putstr_fd("\n", 1);
 	}
 	while (wait(NULL) > 0)

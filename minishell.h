@@ -35,6 +35,12 @@ typedef enum e_token_type
 	APPEND,
 }	t_type;
 
+typedef struct s_shell
+{
+	char	**env;
+	int		exit_status;
+}	t_shell;
+
 typedef struct s_cmd
 {
 	char			**args;

@@ -17,8 +17,7 @@
 
 void	handle_sigint(int sig)
 {
-	(void)sig;
-	g_exit_status = 130;
+	g_signal = sig;
 	write(1, "\n", 1);
 	rl_on_new_line();
 	rl_replace_line("", 0);

@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	g_exit_status = 0;
+int g_signal = 0;
 
 static void	setup_shell(char **envp, char ***my_env)
 {
@@ -50,6 +50,11 @@ static void	shell_loop(char ***my_env)
 	while (1)
 	{
 		input = readline("minishell$ ");
+		if (g_signal == SIGINT)
+		{
+			shell->exit_status = 130;
+			g_signal = 0;
+		}
 		if (input == NULL || ft_strncmp(input, "exit", 5) == 0)
 		{
 			ft_putstr_fd("exit\n", 2);

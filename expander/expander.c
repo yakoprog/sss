@@ -41,7 +41,7 @@ char	*remove_quotes(char *str)
 	return (new_str);
 }
 
-char	*get_expand_var_value(t_expand *exp, char *str, int *i, char **env)
+char	*get_expand_var_value(t_expand *exp, char *str, int *i, t_shell *shell)
 {
 	int	j;
 
@@ -56,7 +56,7 @@ char	*get_expand_var_value(t_expand *exp, char *str, int *i, char **env)
 		while (str[j] && (ft_isalnum(str[j]) || str[j] == '_'))
 			j++;
 		exp->var_name = ft_substr(str, *i + 1, j - (*i + 1));
-		exp->env_val = get_env_value(exp->var_name, env);
+		exp->env_val = get_env_value(exp->var_name, shell);
 		if (exp->env_val)
 			exp->var_value = ft_strdup(exp->env_val);
 		else
@@ -68,7 +68,7 @@ char	*get_expand_var_value(t_expand *exp, char *str, int *i, char **env)
 	return (0);
 }
 
-char	*expand_single_str(char *str, char **env)
+char	*expand_single_str(char *str, t_shell *shell)
 {
 	t_expand	*expand;
 	int			i;
@@ -89,21 +89,21 @@ char	*expand_single_str(char *str, char **env)
 			in_dq = !in_dq;
 		if (str[i] == '$' && !in_sq && (ft_isalnum(str[i + 1]) || str[i
 					+ 1] == '_' || str[i + 1] == '?'))
-			str = execute_expand(str, &i, expand, env);
+			str = execute_expand(str, &i, expand, shell);
 		i++;
 	}
 	free_tokens_for_expand(expand);
 	return (str);
 }
 
-void	expand_cmd_args(t_cmd *tmp_cmd, char **env)
+void	expand_cmd_args(t_cmd *tmp_cmd, t_shell *shell)
 {
 	int	i;
 
 	i = 0;
 	while (tmp_cmd->args[i] != NULL)
 	{
-		tmp_cmd->args[i] = expand_single_str(tmp_cmd->args[i], env);
+		tmp_cmd->args[i] = expand_single_str(tmp_cmd->args[i], shell);
 		tmp_cmd->args[i] = remove_quotes(tmp_cmd->args[i]);
 		i++;
 	}

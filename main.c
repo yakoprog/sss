@@ -12,38 +12,39 @@
 
 #include "minishell.h"
 
-volatile sig_atomic_t g_signal = 0;
+volatile sig_atomic_t	g_signal = 0;
 
-static void	setup_shell(char **envp, char ***my_env)
+static void	setup_shell(char **envp, t_shell *shell)
 {
-	*my_env = copy_env(envp);
-	increment_shlvl(my_env);
+	shell->env = copy_env(envp);
+	shell->exit_status = 0;
+	increment_shlvl(shell);
 	init_signals();
 }
 
-static void	process_command_line(char *input, char ***my_env)
+static void	process_command_line(char *input, t_shell *shell)
 {
 	t_token	*token_list;
 	t_cmd	*cmd_list;
 
-	if (!check_quotes(input))
+	if (!check_quotes(input, shell->env))
 		return ;
 	token_list = NULL;
 	cmd_list = NULL;
 	lexer(input, &token_list);
-	if (!check_syntax(token_list))
+	if (!check_syntax(token_list, shell->env))
 	{
 		free_tokens(token_list);
 		return ;
 	}
-	parse_tokens(token_list, &cmd_list);
-	expand_cmds(cmd_list, *my_env);
-	after_lexer(cmd_list, my_env);
+	parse_tokens(token_list, &cmd_list, shell);
+	expand_cmds(cmd_list, shell);
+	after_lexer(cmd_list, shell);
 	free_tokens(token_list);
 	free_cmds(cmd_list);
 }
 
-static void	shell_loop(char ***my_env)
+static void	shell_loop(t_shell *shell)
 {
 	char	*input;
 
@@ -65,30 +66,26 @@ static void	shell_loop(char ***my_env)
 		if (*input)
 		{
 			add_history(input);
-			process_command_line(input, my_env);
+			process_command_line(input, shell);
 		}
 		free(input);
 	}
 }
 
-static void	cleanup_shell(char **my_env)
-{
-	ft_free_split(my_env);
-	clear_history();
-}
-
 int	main(int ac, char **av, char **envp)
 {
-	char	**my_env;
+	t_shell	*shell;
 
+	shell = NULL;
 	(void)av;
 	if (ac != 1)
 	{
-		print_error(NULL, "Minishell does not take arguments", 1);
+		print_error(shell, NULL, "Minishell does not take arguments", 1);
 		return (1);
 	}
-	setup_shell(envp, &my_env);
-	shell_loop(&my_env);
-	cleanup_shell(my_env);
-	return (shell.exit_status);
+	setup_shell(envp, &shell);
+	shell_loop(&shell);
+	ft_free_split(shell->env);
+	clear_history();
+	return (shell->exit_status);
 }

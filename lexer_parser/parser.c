@@ -84,11 +84,11 @@ static void	process_single_command(t_token **temp, t_cmd **cmds)
 	if (!current_cmd->args)
 		return ;
 	i = 0;
-	pipe_or_not(temp, current_cmd, &i);
+	pipe_or_not(temp, current_cmd, &i, shell);
 	current_cmd->args[i] = NULL;
 }
 
-void	parse_tokens(t_token *tokens, t_cmd **cmds)
+void	parse_tokens(t_token *tokens, t_cmd **cmds, t_shell *shell)
 {
 	t_token	*temp;
 

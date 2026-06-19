@@ -6,13 +6,13 @@
 /*   By: bahkaya <bahkaya@student.42istanbul.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/19 21:38:15 by bahkaya           #+#    #+#             */
-/*   Updated: 2026/06/19 21:38:56 by bahkaya          ###   ########.fr       */
+/*   Updated: 2026/06/20 02:40:02 by bahkaya          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	print_token_error(t_token *bad_token)
+void	print_token_error(t_shell *shell, t_token *bad_token)
 {
 	char	*msg;
 	char	*full_msg;
@@ -25,6 +25,6 @@ void	print_token_error(t_token *bad_token)
 	free(msg);
 	msg = ft_strjoin(full_msg, "'");
 	free(full_msg);
-	print_error(NULL, msg, 2);
+	print_error(shell, NULL, msg, 2);
 	free(msg);
 }

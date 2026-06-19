@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	ft_export(t_cmd *cmd, char ***env)
+void	ft_export(t_cmd *cmd, t_shell *shell)
 {
 	int	i;
 
@@ -26,11 +26,11 @@ void	ft_export(t_cmd *cmd, char ***env)
 	{
 		if (is_valid_env_name(cmd->args[i]) == 0)
 		{
-			export_error("export", cmd->args[i]);
+			export_error(shell, "export", cmd->args[i]);
 		}
 		else
 		{
-			*env = export_add(cmd->args[i], *env);
+			*shell->env = export_add(cmd->args[i], *shell->env);
 		}
 		i++;
 	}

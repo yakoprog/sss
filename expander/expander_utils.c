@@ -79,12 +79,12 @@ char	*build_expanded_str(t_expand *exp, char *str)
 	return (result);
 }
 
-char	*execute_expand(char *str, int *i, t_expand *expand, char **env)
+char	*execute_expand(char *str, int *i, t_expand *expand, t_shell *shell)
 {
 	int	val_len;
 
 	expand->prefix = ft_substr(str, 0, *i);
-	get_expand_var_value(expand, str, i, env);
+	get_expand_var_value(expand, str, i, shell);
 	str = build_expanded_str(expand, str);
 	if (expand->var_value)
 	{

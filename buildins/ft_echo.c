@@ -28,7 +28,7 @@ static int	is_n_flag(char *str)
 	return (1);
 }
 
-void	ft_echo(t_cmd *cmd)
+void	ft_echo(t_cmd *cmd, t_shell *shell)
 {
 	int	i;
 	int	n_flag;

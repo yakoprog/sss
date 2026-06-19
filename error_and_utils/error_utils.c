@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	print_error(char *cmd, char *msg, int err_code)
+int		print_error(t_shell *shell, char *cmd, char *msg, int err_code)
 {
 	ft_putstr_fd("minishell: ", 2);
 	if (cmd)
@@ -26,7 +26,7 @@ void	print_error(char *cmd, char *msg, int err_code)
 	shell->exit_status = err_code;
 }
 
-void	export_error(char *cmd_name, char *bad_arg)
+void	export_error(t_shell *shell, char *cmd_name, char *bad_arg)
 {
 	ft_putstr_fd("minishell: ", 2);
 	ft_putstr_fd(cmd_name, 2);
@@ -52,14 +52,14 @@ int	is_valid_env_name(char *str)
 	return (1);
 }
 
-int	pipe_error(t_token *tokens)
+int		pipe_error(t_token *tokens, t_shell *shell)
 {
 	t_token	*tmp;
 
 	tmp = tokens;
 	if (!tmp->next || tmp->next->type == PIPE)
 	{
-		print_error(NULL, "syntax error near unexpected token `|'", 2);
+		print_error(shell, NULL, "syntax error near unexpected token `|'", 2);
 		return (0);
 	}
 	return (1);

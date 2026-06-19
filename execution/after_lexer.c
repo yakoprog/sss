@@ -59,7 +59,7 @@ int	ft_bypass(t_cmd *tmp, char ***env)
 			return (1);
 		}
 		bypass_redirect_io(tmp, &original_out);
-		execute_builtin(tmp, env, 0);
+		execute_builtin(tmp, shell, 0);
 		dup2(original_out, 1);
 		close(original_out);
 		return (1);
@@ -67,7 +67,7 @@ int	ft_bypass(t_cmd *tmp, char ***env)
 	return (0);
 }
 
-void	after_lexer(t_cmd *cmds, char ***env)
+void	after_lexer(t_cmd *cmds, t_shell *shell)
 {
 	t_cmd	*tmp;
 	int		id;
@@ -76,14 +76,14 @@ void	after_lexer(t_cmd *cmds, char ***env)
 	prev_read_fd = 0;
 	id = 0;
 	tmp = cmds;
-	if (ft_bypass(tmp, env))
+	if (ft_bypass(tmp, shell))
 		return ;
 	ignore_sigint_parent();
 	while (tmp != NULL)
 	{
-		ft_multiple_pipe(tmp, env, &id, &prev_read_fd);
+		ft_multiple_pipe(tmp, shell, &id, &prev_read_fd);
 		tmp = tmp->next;
 	}
-	ft_wait(id);
+	ft_wait(id, shell);
 	restore_sigint_parent();
 }

@@ -76,72 +76,82 @@ typedef struct s_quote_state
 	int	quote_type;
 }	t_quote_state;
 
-extern volatile sig_atomic_t g_signal;
+extern volatile sig_atomic_t	g_signal;
 
+/* lexer / tokens */
 void	lexer(char *input, t_token **tokens);
 void	free_tokens(t_token *tokens);
 t_token	*new_token(char *value, t_type type, int quote_type);
 void	ft_token_add_back(t_token **tokens, t_token *new_node);
-char	*put_command(char *input, char **envp);
-void	ft_free_split(char **arr);
-int		has_slash(char *str);
-void	after_lexer(t_cmd *cmds, char ***env);
-void	parse_tokens(t_token *tokens, t_cmd **cmds);
-int		is_builtin(char *cmd);
-void	execute_builtin(t_cmd *cmd, char ***env, int is_child);
-char	*get_env_value(char *key, char **envp);
-char	**export_add(char *new_var, char **old_env);
-char	**copy_env(char **envp);
-char	**export_remove(char *target, char **old_env);
-void	expand_cmds(t_cmd *cmds, char **env);
-char	*expand_single_str(char *str, char **env);
-char	*remove_quotes(char *str);
-void	redirout_or_not(t_token **temp, t_cmd *current_cmd);
-void	append_or_not(t_token **temp, t_cmd *current_cmd);
-void	redirin_or_not(t_token **temp, t_cmd *current_cmd);
-void	expand_cmd_args(t_cmd *tmp_cmd, char **env);
-void	strip_empty_unquoted(t_cmd *tmp_cmd);
-
-void	init_signals(void);
-void	ignore_sigint_parent(void);
-void	restore_sigint_parent(void);
-void	handle_sigint(int sig);
-void	free_cmds(t_cmd *cmds);
-
-void	pipe_connection(t_cmd *cmd);
-void	ft_multiple_pipe(t_cmd *tmp, char ***env, int *id, int *prev_read_fd);
-
-void	ft_cd(t_cmd *cmd, char ***env);
-void	ft_echo(t_cmd *cmd);
-void	ft_env(char ***env);
-void	ft_exit(t_cmd *cmd, int is_child);
-void	ft_export(t_cmd *cmd, char ***env);
-void	ft_pwd(char ***env);
-void	ft_unset(t_cmd *cmd, char ***env);
-
-void	print_error(char *cmd, char *msg, int err_code);
-void	export_error(char *cmd_name, char *bad_arg);
-int		is_valid_env_name(char *str);
-void	increment_shlvl(char ***env);
-int		check_syntax(t_token *tokens);
-int		check_quotes(char *str);
-
 void	operator_create(t_token **tokens, t_type type, char *input, int len);
 void	word_create(t_token **tokens, char *input, int quote_type, int len);
-int		handle_heredoc(char *delimiter);
 
-void	pipe_or_not(t_token **temp, t_cmd *current_cmd, int *i);
-int		pipe_error(t_token *tokens);
+/* parser */
+void	parse_tokens(t_token *tokens, t_cmd **cmds, t_shell *shell);
+void	pipe_or_not(t_token **temp, t_cmd *current_cmd, int *i, t_shell *shell);
+int		handle_heredoc(char *delimiter);
+void	redirout_or_not(t_token **temp, t_cmd *current_cmd, t_shell *shell);
+void	append_or_not(t_token **temp, t_cmd *current_cmd, t_shell *shell);
+void	redirin_or_not(t_token **temp, t_cmd *current_cmd, t_shell *shell);
+
+/* heredoc */
 void	heredoc_sigint(int sig);
 int		heredoc_cleanup(int *p_fd, int stdin_copy);
 int		heredoc_read_loop(int *p_fd, char *delim, int stdin_copy);
 
-void	free_tokens_for_expand(t_expand *expand);
-void	create_expand(t_expand **expand);
+/* expander */
+void	expand_cmds(t_cmd *cmds, t_shell *shell);
+char	*expand_single_str(char *str, t_shell *shell);
+void	expand_cmd_args(t_cmd *tmp_cmd, t_shell *shell);
+char	*execute_expand(char *str, int *i, t_expand *expand, t_shell *shell);
+char	*get_expand_var_value(t_expand *exp, char *str, int *i, t_shell *shell);
+char	*remove_quotes(char *str);
 char	*build_expanded_str(t_expand *exp, char *str);
-char	*execute_expand(char *str, int *i, t_expand *expand, char **env);
-char	*get_expand_var_value(t_expand *exp, char *str, int *i, char **env);
+void	create_expand(t_expand **expand);
 void	reset_expand_fields(t_expand *expand);
-void	print_token_error(t_token *bad_token);
+void	free_tokens_for_expand(t_expand *expand);
+void	strip_empty_unquoted(t_cmd *tmp_cmd);
+
+/* executor */
+void	after_lexer(t_cmd *cmds, t_shell *shell);
+void	pipe_connection(t_cmd *cmd);
+void	ft_multiple_pipe(t_cmd *tmp, t_shell *shell, int *id, int *prev_read_fd);
+char	*put_command(char *input, char **envp);
+int		has_slash(char *str);
+void	ft_free_split(char **arr);
+
+/* builtins */
+int		is_builtin(char *cmd);
+void	execute_builtin(t_cmd *cmd, t_shell *shell, int is_child);
+void	ft_cd(t_cmd *cmd, t_shell *shell);
+void	ft_echo(t_cmd *cmd, t_shell *shell);
+void	ft_env(t_shell *shell);
+void	ft_exit(t_cmd *cmd, t_shell *shell, int is_child);
+void	ft_export(t_cmd *cmd, t_shell *shell);
+void	ft_pwd(t_shell *shell);
+void	ft_unset(t_cmd *cmd, t_shell *shell);
+
+/* env */
+char	*get_env_value(char *key, char **envp);
+char	**export_add(char *new_var, char **old_env);
+char	**copy_env(char **envp);
+char	**export_remove(char *target, char **old_env);
+void	increment_shlvl(t_shell *shell);
+
+/* errors / utils */
+int		print_error(t_shell *shell, char *cmd, char *msg, int err_code);
+void	export_error(t_shell *shell, char *cmd_name, char *bad_arg);
+int		is_valid_env_name(char *str);
+int		pipe_error(t_token *tokens, t_shell *shell);
+void	print_token_error(t_shell *shell, t_token *bad_token);
+int		check_syntax(t_token *tokens, t_shell *shell);
+int		check_quotes(char *str, t_shell *shell);
+void	free_cmds(t_cmd *cmds);
+
+/* signals */
+void	init_signals(void);
+void	ignore_sigint_parent(void);
+void	restore_sigint_parent(void);
+void	handle_sigint(int sig);
 
 #endif

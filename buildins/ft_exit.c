@@ -30,7 +30,7 @@ static int	is_numeric(char *str)
 	return (1);
 }
 
-void	ft_exit(t_cmd *cmd, int is_child)
+void	ft_exit(t_cmd *cmd, t_shell *shell, int is_child)
 {
 	if (!is_child)
 		ft_putstr_fd("exit\n", 2);
@@ -45,7 +45,7 @@ void	ft_exit(t_cmd *cmd, int is_child)
 	}
 	if (cmd->args[2] != NULL)
 	{
-		print_error("exit", "too many arguments", 1);
+		print_error(shell, "exit", "too many arguments", 1);
 		return ;
 	}
 	exit(ft_atoi(cmd->args[1]) % 256);

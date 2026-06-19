@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	ft_pwd(char ***env)
+void	ft_pwd(t_shell *shell)
 {
 	char	cwd[1024];
 	char	*pwd_val;
@@ -24,13 +24,13 @@ void	ft_pwd(char ***env)
 	}
 	else
 	{
-		pwd_val = get_env_value("PWD", *env);
+		pwd_val = get_env_value("PWD", *shell);
 		if (pwd_val)
 		{
 			ft_putendl_fd(pwd_val, 1);
 			shell->exit_status = 0;
 		}
 		else
-			print_error("pwd", strerror(errno), 1);
+			print_error(shell, "pwd", strerror(errno), 1);
 	}
 }

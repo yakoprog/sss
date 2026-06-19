@@ -62,25 +62,25 @@ void	update_pwd_oldpwd(char ***env)
 	sync_pwd(env);
 }
 
-static int	ft_cd_no_arg(char ***env)
+static int	ft_cd_no_arg(t_shell *shell)
 {
 	char	*home;
 
-	home = get_env_value("HOME", *env);
+	home = get_env_value("HOME", *shell->env);
 	if (home == NULL)
 	{
-		print_error("cd", "HOME not set", 1);
+		print_error(shell, "cd", "HOME not set", 1);
 		return (1);
 	}
 	if (chdir(home) != 0)
 	{
-		print_error("cd", strerror(errno), 1);
+		print_error(shell, "cd", strerror(errno), 1);
 		return (1);
 	}
 	return (0);
 }
 
-void	ft_cd(t_cmd *cmd, char ***env)
+void	ft_cd(t_cmd *cmd, t_shell *shell)
 {
 	shell->exit_status = 0;
 	if (cmd->args[1] != NULL && cmd->args[2] != NULL)
@@ -90,7 +90,7 @@ void	ft_cd(t_cmd *cmd, char ***env)
 		return ;
 	}
 	if (cmd->args[1] == NULL)
-		shell->exit_status = ft_cd_no_arg(env);
+		shell->exit_status = ft_cd_no_arg(shell);
 	else if (chdir(cmd->args[1]) != 0)
 	{
 		ft_putstr_fd("minishell: cd: ", 2);
@@ -101,5 +101,5 @@ void	ft_cd(t_cmd *cmd, char ***env)
 		shell->exit_status = 1;
 	}
 	if (shell->exit_status == 0)
-		update_pwd_oldpwd(env);
+		update_pwd_oldpwd(shell);
 }

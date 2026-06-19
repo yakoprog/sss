@@ -27,11 +27,11 @@ static void	skip_to_pipe(t_token **temp)
 static int	handle_redirect_token(t_token **temp, t_cmd *current_cmd)
 {
 	if ((*temp)->type == REDIR_OUT)
-		redirout_or_not(temp, current_cmd);
+		redirout_or_not(temp, current_cmd, shell);
 	else if ((*temp)->type == APPEND)
-		append_or_not(temp, current_cmd);
+		append_or_not(temp, current_cmd, shell);
 	else if ((*temp)->type == REDIR_IN)
-		redirin_or_not(temp, current_cmd);
+		redirin_or_not(temp, current_cmd, shell);
 	else if ((*temp)->type == HEREDOC)
 	{
 		*temp = (*temp)->next;
@@ -47,7 +47,7 @@ static int	handle_redirect_token(t_token **temp, t_cmd *current_cmd)
 	return (1);
 }
 
-void	pipe_or_not(t_token **temp, t_cmd *current_cmd, int *i)
+void	pipe_or_not(t_token **temp, t_cmd *current_cmd, int *i, t_shell *shell)
 {
 	while (*temp && (*temp)->type != PIPE)
 	{

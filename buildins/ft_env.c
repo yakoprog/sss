@@ -12,14 +12,14 @@
 
 #include "../minishell.h"
 
-void	ft_env(char ***env)
+void	ft_env(t_shell *shell)
 {
 	int	i;
 
 	i = 0;
-	while ((*env)[i] != NULL)
+	while ((*shell->env)[i] != NULL)
 	{
-		ft_putendl_fd((*env)[i], 1);
+		ft_putendl_fd((*shell->env)[i], 1);
 		i++;
 	}
 	shell->exit_status = 0;

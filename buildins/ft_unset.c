@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	ft_unset(t_cmd *cmd, char ***env)
+void	ft_unset(t_cmd *cmd, t_shell *shell)
 {
 	int	i;
 
@@ -23,11 +23,11 @@ void	ft_unset(t_cmd *cmd, char ***env)
 		if (is_valid_env_name(cmd->args[i]) == 0
 			|| ft_strchr(cmd->args[i], '='))
 		{
-			export_error("unset", cmd->args[i]);
+			export_error(shell, "unset", cmd->args[i]);
 		}
 		else
 		{
-			*env = export_remove(cmd->args[i], *env);
+			*shell->env = export_remove(cmd->args[i], *shell->env);
 		}
 		i++;
 	}

@@ -33,20 +33,20 @@ int	is_builtin(char *cmd)
 	return (0);
 }
 
-void	execute_builtin(t_cmd *cmd, char ***env, int is_child)
+void	execute_builtin(t_cmd *cmd, t_shell *shell, int is_child)
 {
 	if (ft_strncmp(cmd->args[0], "pwd", 4) == 0)
-		ft_pwd(env);
+		ft_pwd(shell);
 	else if (ft_strncmp(cmd->args[0], "env", 4) == 0)
-		ft_env(env);
+		ft_env(shell);
 	else if (ft_strncmp(cmd->args[0], "exit", 5) == 0)
-		ft_exit(cmd, is_child);
+		ft_exit(cmd, shell, is_child);
 	else if (ft_strncmp(cmd->args[0], "cd", 3) == 0)
-		ft_cd(cmd, env);
+		ft_cd(cmd, shell);
 	else if (ft_strncmp(cmd->args[0], "echo", 5) == 0)
-		ft_echo(cmd);
+		ft_echo(cmd, shell);
 	else if (ft_strncmp(cmd->args[0], "export", 7) == 0)
-		ft_export(cmd, env);
+		ft_export(cmd, shell);
 	else if (ft_strncmp(cmd->args[0], "unset", 6) == 0)
-		ft_unset(cmd, env);
+		ft_unset(cmd, shell);
 }

@@ -2,9 +2,7 @@ NAME    = minishell
 CC      = cc
 CFLAGS  = -Wall -Wextra -Werror
 LIBFT   = ./libft/libft.a
-GET		= ./get_next_line/libgnl.a
-FTPRINTF = ./ft_printf/libftprintf.a
-LIBS    = -lreadline -L./libft -lft -L./get_next_line -lgnl -L./ft_printf -lftprintf
+LIBS    = -lreadline -L./libft -lft
 
 
 SRC     = main.c \
@@ -47,37 +45,21 @@ RM = rm -f
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(LIBFT) $(GET) $(FTPRINTF)
+$(NAME): $(OBJ) $(LIBFT)
 	@$(CC) $(CFLAGS) $(OBJ) $(LIBS) -o $(NAME)
 
 $(LIBFT):
 	echo "==> building libft"
 	@$(MAKE) -C ./libft
 
-$(GET):
-	echo "==> building get_next_line"
-	@$(MAKE) -C ./get_next_line
-
-$(FTPRINTF):
-	echo "==> building ft_printf"
-	@$(MAKE) -C ./ft_printf
-
 clean:
 	@$(MAKE) -C ./libft clean
-	@$(MAKE) -C ./get_next_line clean
-	@$(MAKE) -C ./ft_printf clean
 	$(RM) $(OBJ)
 
 fclean: clean
 	@$(MAKE) -C ./libft fclean
-	@$(MAKE) -C ./get_next_line fclean
-	@$(MAKE) -C ./ft_printf fclean
 	$(RM) $(NAME)
-
-test: all
-	@$(MAKE) -C ./get_next_line test || true
-	@$(MAKE) clean
 
 re: fclean all
 
-.PHONY: all clean fclean re test $(LIBFT) $(GET) $(FTPRINTF)
+.PHONY: all clean fclean re $(LIBFT)

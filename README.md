@@ -1,137 +1,139 @@
-# mini_shell-on-progress-
+*This project has been created as part of the 42 curriculum by ycinarog, bahkaya.*
 
+# Minishell
 
-*** Workflow - Basic:
+A simplified shell written in C, built for the 42 common core.
 
-1. **Kod Yaz:** VS Code veya Vim ile kodunu yaz, kaydet.
-2. **Terminale Geç:** `git status` yaz (hangi dosyalar değişmiş gör).
-3. **Sahneye Al:** `git add .`
-4. **Paketle:** `git commit -m "Mesajın"`
-5. **Gönder:** `git push origin develop` (veya çalıştığın branch).
+## Description
 
-*** Working at Branch - Basic:
-# 1. Başla
-git checkout develop
-git pull origin develop
+Minishell is our own version of a Unix shell, close to bash. The goal of the project is to understand what actually happens between typing a command and seeing its output: reading input, splitting it into tokens, parsing it into commands, and running it with the right file descriptors.
 
-# 2. Dal Aç
-git checkout -b feature/GOREV-ADI
+What it can do:
 
-# ... Kod Yaz ...
+- Run an interactive prompt with history (`readline`)
+- Find and run commands from `PATH`, or by absolute/relative path
+- Pipes (`|`)
+- Redirections: `<`, `>`, `>>`, `<<` (heredoc)
+- Environment variable expansion (`$VAR`, `$?`)
+- Single and double quotes
+- Signals (`Ctrl+C`, `Ctrl+D`, `Ctrl+\`) behaving like in a real shell
+- Builtins, run without forking: `echo`, `cd`, `pwd`, `export`, `unset`, `env`, `exit`
 
-# 3. Kaydet
-git add .
-git commit -m "feat: yaptığın işin özeti"
+Anything that isn't a builtin goes through `fork` + `execve`, with `dup2` used to wire up pipes and redirections. Exit codes are tracked properly, including the ones coming from signals.
 
-# 4. Gönder
-git push origin feature/GOREV-ADI
+We also wrote our own `libft`, a small C library used instead of part of the standard library.
 
+### How it works
 
+| Module | Role |
+| --- | --- |
+| **Lexer** (`lexer_parser/lexer.c`) | Turns raw input into a list of tokens (words, pipes, redirections) |
+| **Parser** (`lexer_parser/parser*.c`) | Groups tokens into commands, handles redirections, opens heredocs |
+| **Expander** (`expander/`) | Expands `$VAR` / `$?` and removes quotes |
+| **Executor** (`execution/`) | Forks processes, connects pipes, runs builtins or `execve` |
+| **Builtins** (`buildins/`) | `echo`, `cd`, `pwd`, `export`, `unset`, `env`, `exit` |
+| **Signals** (`signals.c`) | `Ctrl+C` / `Ctrl+\` handling for the shell and its children |
+| **libft** (`libft/`) | Our own string/memory/list utilities |
 
-*** MiniShell - Açıklama
+Flow: `input → lexer → parser → expander → executor`
 
-Minishell, dışarıdan bakınca karmaşık görünse de aslında **"Sonsuz Bir Döngü"** içinde çalışan bir fabrikadır.
+## Instructions
 
-Mantığı kafanda oturtman için sana bunu bir **Restoran Mutfağı** metaforuyla ve gerçek kod akışıyla anlatayım.
+### Requirements
 
-Genel akış şöyledir: **OKU (Read) -> PARÇALA (Parse) -> ÇALIŞTIR (Execute) -> TEMİZLE (Free)**
+- Linux (or any POSIX system)
+- `cc` / `gcc`
+- `make`
+- `readline` dev library (`libreadline-dev` on Debian/Ubuntu)
 
----
+### Build
 
-### 1. The Loop (Garson - Siparişi Alma)
+```bash
+make
+```
 
-Programın main fonksiyonu bir `while(1)` döngüsüdür. Kullanıcı "exit" diyene kadar program kapanmaz.
+This builds `libft` first, then compiles and links `minishell`.
 
-* **Prompt:** Ekrana `minishell$ ` yazısını basarsın.
-* **Readline:** Kullanıcının yazdığı satırı okursun.
-* **History:** Yazılanı geçmişe (`add_history`) eklersin (yukarı ok tuşuyla gelsin diye).
-* **Sinyaller:** Kullanıcı burada `Ctrl+C` basarsa yeni satıra geçmeli, programı kapatmamalı.
+```bash
+make clean   # remove .o files
+make fclean  # remove .o files and the binary
+make re      # fclean + all
+```
 
----
+### Run
 
-### 2. The Lexer (Hazırlıkçı - Malzemeyi Doğrama)
+```bash
+./minishell
+```
 
-Kullanıcıdan gelen ham stringi (yazıyı), bilgisayarın anlayacağı **"Token"**lara (kelimelere) ayırma işlemidir.
+```
+minishell$ ls -la | grep ".c"
+minishell$ echo $USER
+minishell$ export FOO=bar
+minishell$ exit
+```
 
-**Örnek Girdi:**
-`ls -la | grep "dosya 42"`
+Quit with `exit` or `Ctrl+D`.
 
-**Lexer'ın Yapacağı İş:**
-Bu uzun yazıyı alır ve bağlı liste (linked list) haline getirir:
+## Resources
 
-1. `WORD`: "ls"
-2. `WORD`: "-la"
-3. `PIPE`: "|"
-4. `WORD`: "grep"
-5. `WORD`: "dosya 42" *(Dikkat: Tırnak içinde olduğu için tek parça kaldı!)*
+### References
 
-> **En Zor Kısım:** Tırnak işaretleri (`'` ve `"`). Tırnak içindeki boşluklar ayrılmaz, tırnak içindeki özel karakterler (pipe gibi) işlevsizleşir.
+- GNU Bash Reference Manual
+- man pages: `readline(3)`, `fork(2)`, `execve(2)`, `pipe(2)`, `dup2(2)`, `waitpid(2)`, `signal(2)`
+- GNU Readline documentation
+- POSIX Shell Command Language spec
+- The 42 Minishell subject
 
----
+### AI usage
 
-### 3. The Expander (Çevirmen)
+We used an AI assistant mainly to understand concepts before implementing them ourselves: how pipes and file descriptors interact, how signals should behave in parent vs child processes, and how bash handles edge cases like quoting or heredoc. It was also used to double check our handling of exit statuses and to help write this README.
 
-Tokenların içindeki dolar işaretli (`$`) değişkenleri gerçek değerleriyle değiştirirsin.
+All the actual code — lexer, parser, expander, executor, builtins, signal handling — was written by us.
 
-* Girdi: `echo $USER`
-* Çıktı: `echo ahmet`
+## Project Structure
 
----
-
-### 4. The Parser (Şef - Tabaklama)
-
-Dağınık duran tokenları, çalıştırılabilir **Komut Paketlerine** (struct) dönüştürürsün. Pipe (`|`) gördüğü yerden listeyi böler.
-
-**Elinizdeki Veri Yapısı Şuna Dönüşmeli:**
-
-* **Komut 1:**
-* Program: `ls`
-* Argümanlar: `["ls", "-la", NULL]`
-* Girdi: Standart Input (Klavye)
-* Çıktı: **PIPE** (Ekrana değil, boruya yazacak)
-
-
-* **Komut 2:**
-* Program: `grep`
-* Argümanlar: `["grep", "dosya 42", NULL]`
-* Girdi: **PIPE** (Boru'dan okuyacak)
-* Çıktı: Standart Output (Ekran)
-
-
-
----
-
-### 5. The Executor (Aşçı - Pişirme)
-
-Burası işin "System Call" kısmıdır. Parser'dan gelen paketleri sırayla çalıştırırsın. Burada iki yol ayrımı var:
-
-#### Yol A: Built-in Komutlar (Ev Yapımı Yemekler)
-
-Eğer komut `cd`, `export`, `unset`, `exit`, `echo`, `pwd`, `env` ise;
-
-* Bunları **fork yapmadan**, doğrudan kendi yazdığın C fonksiyonlarıyla çalıştırırsın.
-* Örneğin `cd` için `chdir()` fonksiyonunu kullanırsın.
-* **Neden?** Çünkü `cd` işlemini child process'te yaparsan, ana programın (shell'in) bulunduğu klasör değişmez.
-
-#### Yol B: Binary Komutlar (`/bin/ls`, `/bin/cat`...)
-
-Eğer komut sistem komutuysa:
-
-1. **Fork():** Kendini kopyala (Child Process).
-2. **Redirections:** Eğer `<` veya `>` varsa, `dup2()` ile dosya yollarını ayarla.
-3. **Pipe:** Eğer boru varsa, input/output'u boruya bağla.
-4. **Execve():** `ls` programını çalıştır. Bu noktada child process `ls` programına dönüşür.
-5. **Waitpid():** Ana process (Parent), çocuğun işini bitirmesini bekler.
-
----
-
-### Özet: Nereden Başlamalı?
-
-Bu yapının tamamını aynı anda kuramazsın. Adım adım gitmen gereken sıra şudur:
-
-1. **Altyapı:** Main döngüsü, `readline` ile yazı okuma.
-2. **Veri Yapısı:** Tokenlar ve Komutlar için `struct` tasarlama. (Burası projenin omurgasıdır).
-3. **Basit Lexer:** Sadece boşluklara göre ayıran bir yapı.
-4. **Basit Executor:** Sadece tek bir komutu (`/bin/ls`) çalıştıran yapı.
-
-**Sana bir "Struct" (Veri Yapısı) taslağı hazırlayayım mı?** Çünkü Lexer ve Parser yazmaya başlamadan önce veriyi nasıl tutacağını bilmen şart.
+```
+minishell/
+├── Makefile
+├── README.md
+├── main.c
+├── minishell.h
+├── signals.c
+├── lexer_parser/
+│   ├── lexer.c
+│   ├── parser.c
+│   ├── parser_check.c
+│   ├── parser_utils.c
+│   ├── redirect_check.c
+│   ├── token_create.c
+│   └── free_tokens.c
+├── expander/
+│   ├── expander.c
+│   ├── expander_utils.c
+│   └── expand_cmd.c
+├── execution/
+│   ├── after_lexer.c
+│   ├── command_parsed.c
+│   ├── pipe_connection.c
+│   ├── ft_multible_pipe.c
+│   └── ft_free.c
+├── buildins/
+│   ├── builtins.c
+│   ├── env_manager.c
+│   ├── env_utils.c
+│   ├── ft_cd.c
+│   ├── ft_echo.c
+│   ├── ft_env.c
+│   ├── ft_exit.c
+│   ├── ft_export.c
+│   ├── ft_pwd.c
+│   └── ft_unset.c
+├── error_and_utils/
+│   ├── utils.c
+│   └── error_utils.c
+└── libft/
+    ├── libft.h
+    ├── Makefile
+    └── *.c
+```

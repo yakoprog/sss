@@ -76,22 +76,3 @@ void	ft_token_add_back(t_token **tokens, t_token *new_node)
 	temp->next = new_node;
 	new_node->prev = temp;
 }
-
-void	single_double_none_quote(char *input, int len, int *quote_type)
-{
-	int	quote;
-
-	quote = 0;
-	if (quote == 0 && (input[len] == '\'' || input[len] == '"'))
-	{
-		quote = input[len];
-		if (quote == '\'')
-			*quote_type = 1;
-		else
-			*quote_type = 2;
-	}
-	else if (quote != 0 && input[len] == quote)
-	{
-		quote = 0;
-	}
-}

@@ -100,6 +100,7 @@ void	expand_cmds(t_cmd *cmds, char **env)
 {
 	t_cmd	*tmp_cmd;
 	int		i;
+	int		j;
 
 	tmp_cmd = cmds;
 	while (tmp_cmd != NULL)
@@ -111,6 +112,21 @@ void	expand_cmds(t_cmd *cmds, char **env)
 			tmp_cmd->args[i] = remove_quotes(tmp_cmd->args[i]);
 			i++;
 		}
+		j = 0;
+		i = 0;
+		while (tmp_cmd->args[i] != NULL)
+		{
+			if (tmp_cmd->args[i][0] == '\0' && !tmp_cmd->arg_quoted[i])
+				free(tmp_cmd->args[i]);
+			else
+			{
+				tmp_cmd->args[j] = tmp_cmd->args[i];
+				tmp_cmd->arg_quoted[j] = tmp_cmd->arg_quoted[i];
+				j++;
+			}
+			i++;
+		}
+		tmp_cmd->args[j] = NULL;
 		tmp_cmd = tmp_cmd->next;
 	}
 }

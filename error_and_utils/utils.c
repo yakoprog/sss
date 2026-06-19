@@ -31,6 +31,7 @@ void	free_cmds(t_cmd *cmds)
 			}
 			free(tmp->args);
 		}
+		free(tmp->arg_quoted);
 		free(tmp);
 	}
 }

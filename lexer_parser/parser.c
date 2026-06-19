@@ -80,6 +80,7 @@ static void	process_single_command(t_token **temp, t_cmd **cmds)
 			scan = scan->next;
 	}
 	current_cmd->args = malloc(sizeof(char *) * (arg_count + 1));
+	current_cmd->arg_quoted = malloc(sizeof(int) * (arg_count + 1));
 	if (!current_cmd->args)
 		return ;
 	i = 0;

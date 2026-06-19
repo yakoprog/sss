@@ -43,16 +43,29 @@ int	handle_operator(char *input, t_token **tokens)
 int	handle_word(char *input, t_token **tokens)
 {
 	int	len;
-	int	quote;
+	int	in_sq;
+	int	in_dq;
 	int	quote_type;
 
 	len = 0;
-	quote = 0;
+	in_sq = 0;
+	in_dq = 0;
 	quote_type = 0;
 	while (input[len])
 	{
-		single_double_none_quote(input, len, &quote_type);
-		if (quote == 0 && (input[len] == ' ' || input[len] == '\t'
+		if (input[len] == '\'' && !in_dq)
+		{
+			in_sq = !in_sq;
+			if (quote_type == 0)
+				quote_type = 1;
+		}
+		else if (input[len] == '"' && !in_sq)
+		{
+			in_dq = !in_dq;
+			if (quote_type == 0)
+				quote_type = 2;
+		}
+		else if (!in_sq && !in_dq && (input[len] == ' ' || input[len] == '\t'
 				|| input[len] == '|' || input[len] == '<'
 				|| input[len] == '>'))
 		{

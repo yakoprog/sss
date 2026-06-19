@@ -42,6 +42,7 @@ typedef enum e_token_type
 typedef struct s_cmd
 {
 	char			**args;
+	int				*arg_quoted;
 	int				fd_in;
 	int				fd_out;
 	struct s_cmd	*next;
@@ -72,7 +73,7 @@ void	lexer(char *input, t_token **tokens);
 void	free_tokens(t_token *tokens);
 t_token	*new_token(char *value, t_type type, int quote_type);
 void	ft_token_add_back(t_token **tokens, t_token *new_node);
-int		check_command(char *input, char **envp);
+//int		check_command(char *input, char **envp);
 char	*put_command(char *input, char **envp);
 void	ft_free_split(char **arr);
 int		has_slash(char *str);

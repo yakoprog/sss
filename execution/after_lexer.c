@@ -37,6 +37,11 @@ int	ft_bypass(t_cmd *tmp, char ***env)
 
 	if (tmp != NULL && tmp->next == NULL && is_builtin(tmp->args[0]))
 	{
+		if (tmp->fd_in == -1 || tmp->fd_out == -1)
+		{
+			g_exit_status = 1;
+			return (1);
+		}
 		original_out = dup(1);
 		if (tmp->fd_out != 1)
 		{
@@ -44,6 +49,7 @@ int	ft_bypass(t_cmd *tmp, char ***env)
 			close(tmp->fd_out);
 		}
 		execute_builtin(tmp, env, 0);
+		fflush(stdout);
 		dup2(original_out, 1);
 		close(original_out);
 		return (1);

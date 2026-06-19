@@ -39,6 +39,8 @@ static void	child_execute(t_cmd *cmd, char ***env)
 {
 	char	*path;
 
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 	pipe_connection(cmd);
 	if (is_builtin(cmd->args[0]))
 	{

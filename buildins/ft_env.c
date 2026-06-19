@@ -22,5 +22,5 @@ void	ft_env(char ***env)
 		ft_putendl_fd((*env)[i], 1);
 		i++;
 	}
-	g_exit_status = 0;
+	shell->exit_status = 0;
 }

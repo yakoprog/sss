@@ -16,7 +16,7 @@ void	ft_unset(t_cmd *cmd, char ***env)
 {
 	int	i;
 
-	g_exit_status = 0;
+	shell->exit_status = 0;
 	i = 1;
 	while (cmd->args[i] != NULL)
 	{

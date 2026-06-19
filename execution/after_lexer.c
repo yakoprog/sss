@@ -55,7 +55,7 @@ int	ft_bypass(t_cmd *tmp, char ***env)
 	{
 		if (tmp->fd_in == -1 || tmp->fd_out == -1)
 		{
-			g_exit_status = 1;
+			shell->exit_status = 1;
 			return (1);
 		}
 		bypass_redirect_io(tmp, &original_out);

@@ -49,7 +49,7 @@ char	*get_expand_var_value(t_expand *exp, char *str, int *i, char **env)
 	if (str[j] == '?')
 	{
 		j++;
-		exp->var_value = ft_itoa(g_exit_status);
+		exp->var_value = ft_itoa(shell->exit_status);
 	}
 	else
 	{

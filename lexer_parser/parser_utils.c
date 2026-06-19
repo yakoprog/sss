@@ -15,7 +15,7 @@
 void	heredoc_sigint(int sig)
 {
 	(void)sig;
-	g_exit_status = 130;
+	g_signal = SIGINT;
 	write(1, "\n", 1);
 	close(STDIN_FILENO);
 }
@@ -41,7 +41,7 @@ int	heredoc_read_loop(int *p_fd, char *delim, int stdin_copy)
 		line = readline("> ");
 		if (!line)
 		{
-			if (g_exit_status == 130)
+			if (g_signal == SIGINT)
 				return (heredoc_cleanup(p_fd, stdin_copy));
 			break ;
 		}

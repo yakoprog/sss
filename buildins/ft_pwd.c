@@ -20,7 +20,7 @@ void	ft_pwd(char ***env)
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
 	{
 		ft_putendl_fd(cwd, 1);
-		g_exit_status = 0;
+		shell->exit_status = 0;
 	}
 	else
 	{
@@ -28,7 +28,7 @@ void	ft_pwd(char ***env)
 		if (pwd_val)
 		{
 			ft_putendl_fd(pwd_val, 1);
-			g_exit_status = 0;
+			shell->exit_status = 0;
 		}
 		else
 			print_error("pwd", strerror(errno), 1);

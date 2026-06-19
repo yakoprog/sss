@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int g_signal = 0;
+volatile sig_atomic_t g_signal = 0;
 
 static void	setup_shell(char **envp, char ***my_env)
 {
@@ -90,5 +90,5 @@ int	main(int ac, char **av, char **envp)
 	setup_shell(envp, &my_env);
 	shell_loop(&my_env);
 	cleanup_shell(my_env);
-	return (g_exit_status);
+	return (shell.exit_status);
 }

@@ -45,7 +45,7 @@ static void	child_execute(t_cmd *cmd, char ***env)
 	if (is_builtin(cmd->args[0]))
 	{
 		execute_builtin(cmd, env, 1);
-		exit(g_exit_status);
+		exit(shell->exit_status);
 	}
 	path = put_command(cmd->args[0], *env);
 	if (!path)

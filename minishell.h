@@ -76,7 +76,7 @@ typedef struct s_quote_state
 	int	quote_type;
 }	t_quote_state;
 
-extern int	g_exit_status;
+extern volatile sig_atomic_t g_signal;
 
 void	lexer(char *input, t_token **tokens);
 void	free_tokens(t_token *tokens);

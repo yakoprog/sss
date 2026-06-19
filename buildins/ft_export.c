@@ -16,7 +16,7 @@ void	ft_export(t_cmd *cmd, char ***env)
 {
 	int	i;
 
-	g_exit_status = 0;
+	shell->exit_status = 0;
 	if (cmd->args[1] == NULL)
 	{
 		return ;

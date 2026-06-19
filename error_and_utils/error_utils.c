@@ -23,7 +23,7 @@ void	print_error(char *cmd, char *msg, int err_code)
 	if (msg)
 		ft_putstr_fd(msg, 2);
 	ft_putstr_fd("\n", 2);
-	g_exit_status = err_code;
+	shell->exit_status = err_code;
 }
 
 void	export_error(char *cmd_name, char *bad_arg)
@@ -33,7 +33,7 @@ void	export_error(char *cmd_name, char *bad_arg)
 	ft_putstr_fd(": `", 2);
 	ft_putstr_fd(bad_arg, 2);
 	ft_putstr_fd("': not a valid identifier\n", 2);
-	g_exit_status = 1;
+	shell->exit_status = 1;
 }
 
 int	is_valid_env_name(char *str)

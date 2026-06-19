@@ -49,5 +49,5 @@ void	ft_echo(t_cmd *cmd)
 	}
 	if (n_flag == 0)
 		ft_putstr_fd("\n", 1);
-	g_exit_status = 0;
+	shell->exit_status = 0;
 }

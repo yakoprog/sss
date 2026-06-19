@@ -35,7 +35,7 @@ void	ft_exit(t_cmd *cmd, int is_child)
 	if (!is_child)
 		ft_putstr_fd("exit\n", 2);
 	if (cmd->args[1] == NULL)
-		exit(g_exit_status);
+		exit(shell->exit_status);
 	if (!is_numeric(cmd->args[1]))
 	{
 		ft_putstr_fd("minishell: exit: ", 2);

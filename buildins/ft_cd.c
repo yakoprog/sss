@@ -82,15 +82,15 @@ static int	ft_cd_no_arg(char ***env)
 
 void	ft_cd(t_cmd *cmd, char ***env)
 {
-	g_exit_status = 0;
+	shell->exit_status = 0;
 	if (cmd->args[1] != NULL && cmd->args[2] != NULL)
 	{
 		ft_putstr_fd("minishell: cd: too many arguments\n", 2);
-		g_exit_status = 1;
+		shell->exit_status = 1;
 		return ;
 	}
 	if (cmd->args[1] == NULL)
-		g_exit_status = ft_cd_no_arg(env);
+		shell->exit_status = ft_cd_no_arg(env);
 	else if (chdir(cmd->args[1]) != 0)
 	{
 		ft_putstr_fd("minishell: cd: ", 2);
@@ -98,8 +98,8 @@ void	ft_cd(t_cmd *cmd, char ***env)
 		ft_putstr_fd(": ", 2);
 		ft_putstr_fd(strerror(errno), 2);
 		ft_putstr_fd("\n", 2);
-		g_exit_status = 1;
+		shell->exit_status = 1;
 	}
-	if (g_exit_status == 0)
+	if (shell->exit_status == 0)
 		update_pwd_oldpwd(env);
 }

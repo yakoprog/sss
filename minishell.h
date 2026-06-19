@@ -136,5 +136,6 @@ char	*build_expanded_str(t_expand *exp, char *str);
 char	*execute_expand(char *str, int *i, t_expand *expand, char **env);
 char	*get_expand_var_value(t_expand *exp, char *str, int *i, char **env);
 void	reset_expand_fields(t_expand *expand);
+void	print_token_error(t_token *bad_token);
 
 #endif

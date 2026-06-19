@@ -30,6 +30,7 @@ SRC     = main.c \
 signals.c \
 ./error_and_utils/utils.c \
 ./error_and_utils/error_utils.c \
+./error_and_utils/utils_print_token_error.c \
 ./expander/expander.c \
 ./expander/expander_utils.c \
 ./expander/expand_cmd.c \

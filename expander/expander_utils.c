@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
- 
+
 void	free_tokens_for_expand(t_expand *expand)
 {
 	if (!expand)
@@ -28,7 +28,7 @@ void	free_tokens_for_expand(t_expand *expand)
 		free(expand->var_value);
 	free(expand);
 }
- 
+
 void	reset_expand_fields(t_expand *expand)
 {
 	if (!expand)
@@ -49,7 +49,7 @@ void	reset_expand_fields(t_expand *expand)
 	expand->var_name = NULL;
 	expand->var_value = NULL;
 }
- 
+
 void	create_expand(t_expand **expand)
 {
 	*expand = malloc(sizeof(t_expand));
@@ -61,12 +61,12 @@ void	create_expand(t_expand **expand)
 	(*expand)->var_name = NULL;
 	(*expand)->var_value = NULL;
 }
- 
+
 char	*build_expanded_str(t_expand *exp, char *str)
 {
 	char	*result;
 	char	*val;
- 
+
 	if (exp->var_value)
 		val = exp->var_value;
 	else
@@ -78,11 +78,11 @@ char	*build_expanded_str(t_expand *exp, char *str)
 	free(str);
 	return (result);
 }
- 
+
 char	*execute_expand(char *str, int *i, t_expand *expand, char **env)
 {
 	int	val_len;
- 
+
 	expand->prefix = ft_substr(str, 0, *i);
 	get_expand_var_value(expand, str, i, env);
 	str = build_expanded_str(expand, str);

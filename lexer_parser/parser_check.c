@@ -11,19 +11,19 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
- 
+
 static void	word_or_not(t_token *temp, t_cmd *current_cmd, int i)
 {
 	current_cmd->args[i] = ft_strdup(temp->value);
 	current_cmd->arg_quoted[i] = (temp->quote_type != 0);
 }
- 
+
 static void	skip_to_pipe(t_token **temp)
 {
 	while (*temp && (*temp)->type != PIPE)
 		*temp = (*temp)->next;
 }
- 
+
 static int	handle_redirect_token(t_token **temp, t_cmd *current_cmd)
 {
 	if ((*temp)->type == REDIR_OUT)
@@ -46,7 +46,7 @@ static int	handle_redirect_token(t_token **temp, t_cmd *current_cmd)
 		return (0);
 	return (1);
 }
- 
+
 void	pipe_or_not(t_token **temp, t_cmd *current_cmd, int *i)
 {
 	while (*temp && (*temp)->type != PIPE)

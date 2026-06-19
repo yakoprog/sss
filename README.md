@@ -87,9 +87,9 @@ Quit with `exit` or `Ctrl+D`.
 
 ### AI usage
 
-We used an AI assistant mainly to understand concepts before implementing them ourselves: how pipes and file descriptors interact, how signals should behave in parent vs child processes, and how bash handles edge cases like quoting or heredoc. It was also used to double check our handling of exit statuses and to help write this README.
+We used an AI assistant mainly to understand concepts before implementing them ourselves: We tried to implement out pipex project to minishell project. In order to do that we tried to understand how multiple should work. Moreover, how signals should behave in parent vs child processes, and how bash handles edge cases like quoting or heredoc. It was also used to double check our handling of exit statuses and to help write this README.
 
-All the actual code — lexer, parser, expander, executor, builtins, signal handling — was written by us.
+All the actual code — lexer, parser, command location check, expander, executor, builtins, signal handling — was written by us.
 
 ## Project Structure
 

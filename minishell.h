@@ -16,8 +16,6 @@
 # include "libft/libft.h"
 # include <stdio.h>
 # include <stdlib.h>
-# include <stdint.h>
-# include <stdbool.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include <signal.h>
@@ -137,5 +135,6 @@ void	create_expand(t_expand **expand);
 char	*build_expanded_str(t_expand *exp, char *str);
 char	*execute_expand(char *str, int *i, t_expand *expand, char **env);
 char	*get_expand_var_value(t_expand *exp, char *str, int *i, char **env);
+void	reset_expand_fields(t_expand *expand);
 
 #endif

@@ -11,11 +11,11 @@
 /* ************************************************************************** */
 
 #include "../minishell.h"
-
+ 
 static void	ft_wait(int id)
 {
 	int	status;
-
+ 
 	waitpid(id, &status, 0);
 	if (WIFEXITED(status))
 		g_exit_status = WEXITSTATUS(status);
@@ -30,11 +30,28 @@ static void	ft_wait(int id)
 	while (wait(NULL) > 0)
 		;
 }
-
+ 
+static void	bypass_redirect_io(t_cmd *tmp, int *original_out)
+{
+	*original_out = dup(1);
+	if (tmp->fd_in > 2)
+	{
+		dup2(tmp->fd_in, 0);
+		close(tmp->fd_in);
+		tmp->fd_in = 0;
+	}
+	if (tmp->fd_out != 1)
+	{
+		dup2(tmp->fd_out, 1);
+		close(tmp->fd_out);
+		tmp->fd_out = 1;
+	}
+}
+ 
 int	ft_bypass(t_cmd *tmp, char ***env)
 {
 	int	original_out;
-
+ 
 	if (tmp != NULL && tmp->next == NULL && is_builtin(tmp->args[0]))
 	{
 		if (tmp->fd_in == -1 || tmp->fd_out == -1)
@@ -42,12 +59,7 @@ int	ft_bypass(t_cmd *tmp, char ***env)
 			g_exit_status = 1;
 			return (1);
 		}
-		original_out = dup(1);
-		if (tmp->fd_out != 1)
-		{
-			dup2(tmp->fd_out, 1);
-			close(tmp->fd_out);
-		}
+		bypass_redirect_io(tmp, &original_out);
 		execute_builtin(tmp, env, 0);
 		dup2(original_out, 1);
 		close(original_out);
@@ -55,13 +67,13 @@ int	ft_bypass(t_cmd *tmp, char ***env)
 	}
 	return (0);
 }
-
+ 
 void	after_lexer(t_cmd *cmds, char ***env)
 {
 	t_cmd	*tmp;
 	int		id;
 	int		prev_read_fd;
-
+ 
 	prev_read_fd = 0;
 	id = 0;
 	tmp = cmds;
@@ -76,3 +88,4 @@ void	after_lexer(t_cmd *cmds, char ***env)
 	ft_wait(id);
 	restore_sigint_parent();
 }
+ 

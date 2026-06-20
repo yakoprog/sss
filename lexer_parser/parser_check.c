@@ -24,7 +24,8 @@ static void	skip_to_pipe(t_token **temp)
 		*temp = (*temp)->next;
 }
 
-static int	handle_redirect_token(t_token **temp, t_cmd *current_cmd, t_shell *shell)
+static int	handle_redirect_token(t_token **temp, t_cmd *current_cmd,
+	t_shell *shell)
 {
 	if ((*temp)->type == REDIR_OUT)
 		redirout_or_not(temp, current_cmd, shell);

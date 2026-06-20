@@ -21,9 +21,12 @@ char	*get_env_value(char *key, char **envp)
 	key_len = ft_strlen(key);
 	while (envp[i] != NULL)
 	{
-		if (ft_strncmp(envp[i], key, key_len) == 0 && envp[i][key_len] == '=')
+		if (ft_strncmp(envp[i], key, key_len) == 0)
 		{
-			return (envp[i] + key_len + 1);
+			if (envp[i][key_len] == '=')
+				return (envp[i] + key_len + 1);
+			if (envp[i][key_len] == '\0')
+				return ("");
 		}
 		i++;
 	}

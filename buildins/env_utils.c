@@ -14,7 +14,9 @@
 
 static int	is_target_env(char *env_line, char *target, int len)
 {
-	if (ft_strncmp(env_line, target, len) == 0 && env_line[len] == '=')
+	if (ft_strncmp(env_line, target, len) != 0)
+		return (0);
+	if (env_line[len] == '=' || env_line[len] == '\0')
 		return (1);
 	return (0);
 }

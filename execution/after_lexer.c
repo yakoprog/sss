@@ -59,7 +59,9 @@ int	ft_bypass(t_cmd *tmp, t_shell *shell)
 			return (1);
 		}
 		bypass_redirect_io(tmp, &original_out);
+		ignore_sigint_parent();
 		execute_builtin(tmp, shell, 0);
+		restore_sigint_parent();
 		dup2(original_out, 1);
 		close(original_out);
 		return (1);

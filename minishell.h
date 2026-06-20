@@ -115,7 +115,8 @@ void	strip_empty_unquoted(t_cmd *tmp_cmd);
 /* executor */
 void	after_lexer(t_cmd *cmds, t_shell *shell);
 void	pipe_connection(t_cmd *cmd);
-void	ft_multiple_pipe(t_cmd *tmp, t_shell *shell, int *id, int *prev_read_fd);
+void	ft_multiple_pipe(t_cmd *tmp, t_shell *shell, int *id,
+	int *prev_read_fd);
 char	*put_command(char *input, char **envp);
 int		has_slash(char *str);
 void	ft_free_split(char **arr);

@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-int		print_error(t_shell *shell, char *cmd, char *msg, int err_code)
+int	print_error(t_shell *shell, char *cmd, char *msg, int err_code)
 {
 	ft_putstr_fd("minishell: ", 2);
 	if (cmd)
@@ -53,7 +53,7 @@ int	is_valid_env_name(char *str)
 	return (1);
 }
 
-int		pipe_error(t_token *tokens, t_shell *shell)
+int	pipe_error(t_token *tokens, t_shell *shell)
 {
 	t_token	*tmp;
 

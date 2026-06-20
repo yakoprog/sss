@@ -65,7 +65,7 @@ void	increment_shlvl(t_shell *shell)
 	free(new_shlvl_str);
 }
 
-int		check_quotes(char *str, t_shell *shell)
+int	check_quotes(char *str, t_shell *shell)
 {
 	int	i;
 	int	quote;
@@ -88,7 +88,7 @@ int		check_quotes(char *str, t_shell *shell)
 	return (1);
 }
 
-int		check_syntax(t_token *tokens, t_shell *shell)
+int	check_syntax(t_token *tokens, t_shell *shell)
 {
 	t_token	*tmp;
 

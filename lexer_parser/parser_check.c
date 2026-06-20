@@ -47,7 +47,8 @@ static int	handle_redirect_token(t_token **temp, t_cmd *current_cmd, t_shell *sh
 	return (1);
 }
 
-void	pipe_or_not(t_token **temp, t_cmd *current_cmd, int *i, t_shell *shell)
+void	pipe_or_not(t_token **temp, t_cmd *current_cmd, int *i,
+	t_shell *shell)
 {
 	while (*temp && (*temp)->type != PIPE)
 	{

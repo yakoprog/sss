@@ -27,12 +27,12 @@ static void	process_command_line(char *input, t_shell *shell)
 	t_token	*token_list;
 	t_cmd	*cmd_list;
 
-	if (!check_quotes(input, shell->env))
+	if (!check_quotes(input, shell))
 		return ;
 	token_list = NULL;
 	cmd_list = NULL;
 	lexer(input, &token_list);
-	if (!check_syntax(token_list, shell->env))
+	if (!check_syntax(token_list, shell))
 	{
 		free_tokens(token_list);
 		return ;
@@ -74,18 +74,17 @@ static void	shell_loop(t_shell *shell)
 
 int	main(int ac, char **av, char **envp)
 {
-	t_shell	*shell;
+	t_shell	shell;
 
-	shell = NULL;
 	(void)av;
 	if (ac != 1)
 	{
-		print_error(shell, NULL, "Minishell does not take arguments", 1);
+		print_error(&shell, NULL, "Minishell does not take arguments", 1);
 		return (1);
 	}
 	setup_shell(envp, &shell);
 	shell_loop(&shell);
-	ft_free_split(shell->env);
+	ft_free_split(shell.env);
 	clear_history();
-	return (shell->exit_status);
+	return (shell.exit_status);
 }

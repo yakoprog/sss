@@ -52,15 +52,15 @@ void	increment_shlvl(t_shell *shell)
 	char	*new_num_str;
 	char	*new_shlvl_str;
 
-	shlvl_val = get_env_value("SHLVL", *shell->env);
+	shlvl_val = get_env_value("SHLVL", shell->env);
 	if (shlvl_val)
 		shlvl_num = ft_atoi(shlvl_val) + 1;
 	else
 		shlvl_num = 1;
 	new_num_str = ft_itoa(shlvl_num);
 	new_shlvl_str = ft_strjoin("SHLVL=", new_num_str);
-	*shell->env = export_remove("SHLVL", *shell->env);
-	*shell->env = export_add(new_shlvl_str, *shell->env);
+	shell->env = export_remove("SHLVL", shell->env);
+	shell->env = export_add(new_shlvl_str, shell->env);
 	free(new_num_str);
 	free(new_shlvl_str);
 }
@@ -109,7 +109,7 @@ int		check_syntax(t_token *tokens, t_shell *shell)
 			}
 		}
 		if (tmp->type == PIPE)
-			if (!pipe_error(shell, tmp))
+			if (!pipe_error(tmp, shell))
 				return (0);
 		tmp = tmp->next;
 	}

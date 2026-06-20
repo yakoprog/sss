@@ -119,6 +119,7 @@ void	ft_multiple_pipe(t_cmd *tmp, t_shell *shell, int *id, int *prev_read_fd);
 char	*put_command(char *input, char **envp);
 int		has_slash(char *str);
 void	ft_free_split(char **arr);
+int		ft_bypass(t_cmd *tmp, t_shell *shell);
 
 /* builtins */
 int		is_builtin(char *cmd);
@@ -130,6 +131,7 @@ void	ft_exit(t_cmd *cmd, t_shell *shell, int is_child);
 void	ft_export(t_cmd *cmd, t_shell *shell);
 void	ft_pwd(t_shell *shell);
 void	ft_unset(t_cmd *cmd, t_shell *shell);
+void	update_pwd_oldpwd(t_shell *shell);
 
 /* env */
 char	*get_env_value(char *key, char **envp);

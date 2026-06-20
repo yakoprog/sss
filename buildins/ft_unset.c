@@ -27,7 +27,7 @@ void	ft_unset(t_cmd *cmd, t_shell *shell)
 		}
 		else
 		{
-			*shell->env = export_remove(cmd->args[i], *shell->env);
+			shell->env = export_remove(cmd->args[i], shell->env);
 		}
 		i++;
 	}

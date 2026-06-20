@@ -17,9 +17,9 @@ void	ft_env(t_shell *shell)
 	int	i;
 
 	i = 0;
-	while ((*shell->env)[i] != NULL)
+	while ((shell->env)[i] != NULL)
 	{
-		ft_putendl_fd((*shell->env)[i], 1);
+		ft_putendl_fd((shell->env)[i], 1);
 		i++;
 	}
 	shell->exit_status = 0;

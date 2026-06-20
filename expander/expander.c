@@ -56,7 +56,7 @@ char	*get_expand_var_value(t_expand *exp, char *str, int *i, t_shell *shell)
 		while (str[j] && (ft_isalnum(str[j]) || str[j] == '_'))
 			j++;
 		exp->var_name = ft_substr(str, *i + 1, j - (*i + 1));
-		exp->env_val = get_env_value(exp->var_name, shell);
+		exp->env_val = get_env_value(exp->var_name, shell->env);
 		if (exp->env_val)
 			exp->var_value = ft_strdup(exp->env_val);
 		else

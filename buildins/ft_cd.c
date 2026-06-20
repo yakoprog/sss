@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static void	safe_env_update(char *key, char *value, char ***env)
+static void	safe_env_update(char *key, char *value, t_shell *shell)
 {
 	char	*env_str;
 	char	*key_no_eq;
@@ -30,53 +30,47 @@ static void	safe_env_update(char *key, char *value, char ***env)
 		free(env_str);
 		return ;
 	}
-	*env = export_remove(key_no_eq, *env);
-	*env = export_add(env_str, *env);
+	shell->env = export_remove(key_no_eq, shell->env);
+	shell->env = export_add(env_str, shell->env);
 	free(key_no_eq);
 	free(env_str);
 }
 
-static void	sync_pwd(char ***env)
+static void	sync_pwd(t_shell *shell)
 {
 	char	cwd[1024];
 
 	if (getcwd(cwd, sizeof(cwd)) != NULL)
-		safe_env_update("PWD=", cwd, env);
+		safe_env_update("PWD=", cwd, shell);
 }
 
-void	update_pwd_oldpwd(char ***env)
+void	update_pwd_oldpwd(t_shell *shell)
 {
 	char	*old_path;
 	char	*old_path_copy;
 
-	old_path = get_env_value("PWD", *env);
+	old_path = get_env_value("PWD", shell->env);
 	if (old_path)
 		old_path_copy = ft_strdup(old_path);
 	else
 		old_path_copy = ft_strdup("");
 	if (old_path_copy)
 	{
-		safe_env_update("OLDPWD=", old_path_copy, env);
+		safe_env_update("OLDPWD=", old_path_copy, shell);
 		free(old_path_copy);
 	}
-	sync_pwd(env);
+	sync_pwd(shell);
 }
 
 static int	ft_cd_no_arg(t_shell *shell)
 {
 	char	*home;
 
-	home = get_env_value("HOME", *shell->env);
+	home = get_env_value("HOME", shell->env);
 	if (home == NULL)
-	{
-		print_error(shell, "cd", "HOME not set", 1);
-		return (1);
-	}
+		return (print_error(shell, "cd", "HOME not set", 1));
 	if (chdir(home) != 0)
-	{
-		print_error(shell, "cd", strerror(errno), 1);
-		return (1);
-	}
+		return (print_error(shell, "cd", strerror(errno), 1));
 	return (0);
 }
 

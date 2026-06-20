@@ -47,9 +47,9 @@ static void	child_execute(t_cmd *cmd, t_shell *shell)
 		execute_builtin(cmd, shell, 1);
 		exit(shell->exit_status);
 	}
-	path = put_command(cmd->args[0], shell);
+	path = put_command(cmd->args[0], shell->env);
 	if (!path)
-		report_path_error(cmd->args[0]);
+		report_path_error(cmd->args[0], shell);
 	execve(path, cmd->args, shell->env);
 	print_error(shell, cmd->args[0], strerror(errno), 126);
 	exit(126);

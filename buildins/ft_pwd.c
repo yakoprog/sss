@@ -24,7 +24,7 @@ void	ft_pwd(t_shell *shell)
 	}
 	else
 	{
-		pwd_val = get_env_value("PWD", *shell);
+		pwd_val = get_env_value("PWD", shell->env);
 		if (pwd_val)
 		{
 			ft_putendl_fd(pwd_val, 1);

@@ -59,7 +59,7 @@ void	cmd_add_back(t_cmd **cmds, t_cmd *new_node)
 	return ;
 }
 
-static void	process_single_command(t_token **temp, t_cmd **cmds)
+static void	process_single_command(t_token **temp, t_cmd **cmds, t_shell *shell)
 {
 	t_token	*scan;
 	t_cmd	*current_cmd;
@@ -100,6 +100,6 @@ void	parse_tokens(t_token *tokens, t_cmd **cmds, t_shell *shell)
 			temp = temp->next;
 			continue ;
 		}
-		process_single_command(&temp, cmds);
+		process_single_command(&temp, cmds, shell);
 	}
 }

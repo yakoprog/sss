@@ -47,7 +47,7 @@ static void	bypass_redirect_io(t_cmd *tmp, int *original_out)
 	}
 }
 
-int	ft_bypass(t_cmd *tmp, char ***env)
+int	ft_bypass(t_cmd *tmp, t_shell *shell)
 {
 	int	original_out;
 

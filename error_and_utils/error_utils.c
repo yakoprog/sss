@@ -24,6 +24,7 @@ int		print_error(t_shell *shell, char *cmd, char *msg, int err_code)
 		ft_putstr_fd(msg, 2);
 	ft_putstr_fd("\n", 2);
 	shell->exit_status = err_code;
+	return (err_code);
 }
 
 void	export_error(t_shell *shell, char *cmd_name, char *bad_arg)

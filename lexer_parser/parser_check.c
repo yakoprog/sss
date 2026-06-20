@@ -24,7 +24,7 @@ static void	skip_to_pipe(t_token **temp)
 		*temp = (*temp)->next;
 }
 
-static int	handle_redirect_token(t_token **temp, t_cmd *current_cmd)
+static int	handle_redirect_token(t_token **temp, t_cmd *current_cmd, t_shell *shell)
 {
 	if ((*temp)->type == REDIR_OUT)
 		redirout_or_not(temp, current_cmd, shell);
@@ -56,7 +56,7 @@ void	pipe_or_not(t_token **temp, t_cmd *current_cmd, int *i, t_shell *shell)
 			word_or_not(*temp, current_cmd, *i);
 			(*i)++;
 		}
-		else if (!handle_redirect_token(temp, current_cmd))
+		else if (!handle_redirect_token(temp, current_cmd, shell))
 			return (skip_to_pipe(temp));
 		if (*temp)
 			*temp = (*temp)->next;
